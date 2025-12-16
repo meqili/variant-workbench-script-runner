@@ -1,5 +1,6 @@
 import argparse
 import glow
+from pyspark.sql import SparkSession
 
 parser = argparse.ArgumentParser(description="Run the variant workbench script")
 
@@ -73,7 +74,7 @@ if args.studies:
 #############################################
 ######### MAIN ###############################
 #############################################
-from pyspark.sql import SparkSession, functions as F
+from pyspark.sql import functions as F
 
 # parameter configuration
 input_file1 = args.input_file1
