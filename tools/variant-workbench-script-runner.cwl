@@ -92,24 +92,40 @@ inputs:
   type: boolean?
 - id: studies
   type: boolean?
+- id: output_dir_name
+  type: string
+  inputBinding:
+    prefix: -O
+    position: 3
+    shellQuote: false
+- id: tar_ouput
+  type: boolean
+  doc: "if you want to generate tar.gz files for this database"
 
 outputs:
-- id: app_output
+- id: file_output
   type: File?
   outputBinding:
     glob: '*.tsv.gz'
+- id: folder_output
+  type: Directory?
+  outputBinding:
+    glob: $(inputs.output_dir_name)
+    loadListing: deep_listing
+- id: tarred_ouput
+  type: File?
+  outputBinding:
+    glob: '*.tar.gz'
 
-baseCommand: [/bin/bash, -c]
+baseCommand: []
 arguments:
   - position: 1
     valueFrom: |
       ${
         var parts = [];
 
-        // OPTIONAL: print what will run (for debugging)
         parts.push("echo RUNNING COMMAND");
 
-        // conditionally extract tar files
         if (inputs.input_tarred_file1) {
           parts.push("tar -xvf " + inputs.input_tarred_file1.path);
         }
@@ -148,4 +164,7 @@ arguments:
         return parts.join(" && ");
       }
     shellQuote: false
-
+  - position: 10
+    valueFrom: >
+      ${ return inputs.tar_ouput ? '&& tar -czvf ' + inputs.output_dir_name + '.tar.gz ' + inputs.output_dir_name : ''; }
+    shellQuote: false
