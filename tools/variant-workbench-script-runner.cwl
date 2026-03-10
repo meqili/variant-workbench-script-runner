@@ -93,7 +93,7 @@ inputs:
 - id: studies
   type: boolean?
 - id: output_dir_name
-  type: string
+  type: string?
   inputBinding:
     prefix: -O
     position: 3
